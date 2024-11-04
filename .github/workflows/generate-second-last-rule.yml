@@ -1,4 +1,4 @@
-name: Build Mastodon container release images with Tangerine UI theme
+name: Generate second-last-rule.json
 on:
   workflow_dispatch:
 
