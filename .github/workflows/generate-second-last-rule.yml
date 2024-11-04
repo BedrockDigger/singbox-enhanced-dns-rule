@@ -32,11 +32,11 @@ jobs:
                 mode: "and",
                 rules: [
                   {
-                    domain: $domain_array,
+                    domain: $domain_array[0] | .[],
                     invert: true
                   },
                   {
-                    ip_cidr: $ip_cidr_array
+                    ip_cidr: $ip_cidr_array[0] | .[]
                   }
                 ]
               }
