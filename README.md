@@ -1,0 +1,1 @@
+# singbox-enhanced-dns-rule
