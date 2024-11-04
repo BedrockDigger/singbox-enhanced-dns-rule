@@ -21,7 +21,7 @@ jobs:
       - name: Combine both rulesets and write to second-last-rule.json
         run: |
           jq -c '.rules[0].domain' geolocation-!cn.json > temp_domain.json
-          jq -c '.rules[0].ip_cidr' geoip-cn.json temp_ip_cidr.json
+          jq -c '.rules[0].ip_cidr' geoip-cn.json > temp_ip_cidr.json
           jq -n --argjson domain_array "$(cat temp_domain.json)" --argjson ip_cidr_array "$(cat temp_ip_cidr.json)" '{
             version: 1,
             rules: [
