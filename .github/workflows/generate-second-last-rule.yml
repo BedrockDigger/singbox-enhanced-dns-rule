@@ -1,6 +1,8 @@
 name: Generate second-last-rule.json
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "00 23 * * *" # 7:00 AM UTC+8
 
 jobs:
   generate_rule:
@@ -48,4 +50,4 @@ jobs:
           git add .
           git commit -m "Released on ${{ env.BUILDTIME }}"
           git remote add new_origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
-          git push -f -u new_origin main
+          git push -f -u new_origin main 
