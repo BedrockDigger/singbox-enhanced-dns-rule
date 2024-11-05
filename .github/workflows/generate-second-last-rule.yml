@@ -2,7 +2,7 @@ name: Generate second-last-rule.json
 on:
   workflow_dispatch:
   schedule:
-    - cron: "00 23 * * *" # 7:00 AM UTC+8
+    - cron: "00 23 * * *" # 8:00 AM UTC+8
 
 jobs:
   generate_rule:
