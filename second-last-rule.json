@@ -188,6 +188,7 @@
             "gamer-cds.cdn.hinet.net",
             "gamer2-cds.cdn.hinet.net",
             "gigabyte2.azureedge.net",
+            "github-api.arkoselabs.com",
             "github-cloud.s3.amazonaws.com",
             "gitlab-assets.oss-cn-hongkong.aliyuncs.com",
             "google-ohttp-relay-safebrowsing.fastly-edge.com",
@@ -405,6 +406,7 @@
             "statics-marketingsites-wcus-ms-com.akamaized.net",
             "steambroadcast.akamaized.net",
             "steamcdn-a.akamaihd.net",
+            "steamcloudsweden.blob.core.windows.net",
             "steamcommunity-a.akamaihd.net",
             "steamcommunity-a.akamaihd.net.edgesuite.net",
             "steammobile.akamaized.net",
@@ -595,6 +597,7 @@
             "wwis-dubc1-vip99.adobe.com",
             "www-cdn.icloud.com.akadns.net",
             "yangzhi.app",
+            "yt3.googleusercontent.com",
             "zeenews-fonts.s3.amazonaws.com",
             "ztedevices.com"
           ],
