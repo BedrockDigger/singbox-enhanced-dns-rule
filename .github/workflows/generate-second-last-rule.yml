@@ -19,7 +19,7 @@ jobs:
       - name: Download geolocation-!cn.json
         run: curl -o geolocation-!cn.json https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo/geosite/geolocation-!cn.json
       - name: Download geoip-cn.json
-        run: curl -o geoip-cn.json https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo/geoip/cn.json
+        run: curl -o geoip-cn.json https://ruleset.skk.moe/sing-box/ip/china_ip.json
       - name: Combine both rulesets and write to second-last-rule.json
         run: |
           jq -c '.rules[0].domain' geolocation-!cn.json > temp_domain.json
