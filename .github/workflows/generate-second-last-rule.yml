@@ -37,7 +37,7 @@ jobs:
                   invert: true
                 },
                 {
-                  ip_cidr: $b[0].rules[0].ip_cidr + $c[0].rules[0].ip_cidr
+                  ip_cidr: ($b[0].rules[0].ip_cidr + $c[0].rules[0].ip_cidr)
                 }
               ]
             }]
