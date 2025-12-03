@@ -19,12 +19,14 @@ jobs:
       - name: Download geolocation-!cn.json
         run: curl -o geolocation-!cn.json https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/refs/heads/sing/geo/geosite/geolocation-!cn.json
       - name: Download geoip-cn.json
-        run: curl -o geoip-cn.json https://ruleset.skk.moe/sing-box/ip/china_ip.json
+        run: |
+          curl -o geoip-cn.json https://ruleset.skk.moe/sing-box/ip/china_ip.json
+          curl -o geoip-cn-ipv6.json https://ruleset.skk.moe/sing-box/ip/china_ip_ipv6.json
       - name: Combine both rulesets and write to second-last-rule.json
         run: |
           jq -c '.rules[0].domain' geolocation-!cn.json > temp_domain.json
           jq -c '.rules[0].ip_cidr' geoip-cn.json > temp_ip_cidr.json
-          jq -n --slurpfile a geolocation-!cn.json --slurpfile b geoip-cn.json '{
+          jq -n --slurpfile a geolocation-!cn.json --slurpfile b geoip-cn.json --slurpfile c geoip-cn-ipv6.json '{
             version: 1,
             rules: [{
               type: "logical",
@@ -35,7 +37,7 @@ jobs:
                   invert: true
                 },
                 {
-                  ip_cidr: $b[0].rules[0].ip_cidr
+                  ip_cidr: $b[0].rules[0].ip_cidr + $c[0].rules[0].ip_cidr
                 }
               ]
             }]
