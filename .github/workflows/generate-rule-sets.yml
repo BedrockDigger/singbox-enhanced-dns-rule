@@ -2,7 +2,10 @@ name: Generate rule-sets
 on:
   workflow_dispatch:
   schedule:
-    - cron: "00 23 * * *" # 8:00 AM UTC+8
+    - cron: "5 3 * * *" # 7:00 AM UTC+8 (use "00 00 * * *" for 8:00 AM UTC+8)
+
+permissions:
+  contents: write
 
 jobs:
   generate_rule:
@@ -14,23 +17,13 @@ jobs:
       - name: Download rulesets
         run: |
           curl -fSL --parallel --parallel-immediate \
-            -o geolocation-!cn.json https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-!cn.json \
-            -o geoip-cn.txt https://cdn.jsdelivr.net/gh/DH-Teams/DH-Geo_AS_IP_CN@main/Geo_AS_IP_CN.txt \
-            -o geoip-cn-ipv6.txt https://cdn.jsdelivr.net/gh/DH-Teams/DH-Geo_AS_IP_CN@main/Geo_AS_IP_CN_6.txt \
+            -o "geolocation-!cn.json" https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-!cn.json \
+            -o geoip-cn.txt https://cdn.jsdelivr.net/gh/1715173329/IPCIDR-CHINA@master/ip.txt \
             -o netflix.json https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/netflix.json
-          jq -Rn '{
-            version: 1,
-            rules: [
-              {
-                ip_cidr: [inputs | select(length > 0)]
-              }
-            ]
-          }' geoip-cn.txt > geoip-cn.json
-          jq -Rn '[inputs | select(length > 0)]' geoip-cn-ipv6.txt > geoip-cn-ipv6.json
 
-      - name: Combine rulesets into second-last-rule.json
+      - name: Generate second-last-rule.json
         run: |
-          jq -n --slurpfile a geolocation-\!cn.json --slurpfile b geoip-cn.json --slurpfile c geoip-cn-ipv6.json '{
+          jq -Rn --slurpfile a "geolocation-!cn.json" '{
             version: 1,
             rules: [{
               type: "logical",
@@ -41,28 +34,25 @@ jobs:
                   invert: true
                 },
                 {
-                  ip_cidr: ($b[0].rules[0].ip_cidr + $c[0])
+                  ip_cidr: [inputs | select(length > 0)]
                 }
               ]
             }]
-          }' > second-last-rule.json
+          }' geoip-cn.txt > second-last-rule.json
 
-      - name: Generate netflix-ipv6.json
+      - name: Generate netflix-ipv6.txt
         run: |
-          jq '{
-            version: .version,
-            rules: [
-              .rules[0] | {
-                ip_cidr: [.ip_cidr[] | select(contains(":"))]
-              }
-            ]
-          }' netflix.json > netflix-ipv6.json
-          jq -r '.rules[0].ip_cidr[]' netflix-ipv6.json > netflix-ipv6.txt
+          jq -r '.rules[0].ip_cidr[] | select(contains(":"))' netflix.json > netflix-ipv6.txt
 
       - name: Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add geoip-cn.json second-last-rule.json netflix-ipv6.json netflix-ipv6.txt
-          git commit --allow-empty -m "Released on $(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M')"
-          git push
+          git rm --ignore-unmatch geoip-cn.json netflix-ipv6.json
+          git add second-last-rule.json netflix-ipv6.txt
+          if git diff --staged --quiet; then
+            echo "No changes detected. Skipping commit."
+          else
+            git commit -m "Released on $(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M')"
+            git push
+          fi
