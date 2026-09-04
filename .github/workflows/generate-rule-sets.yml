@@ -2,7 +2,7 @@ name: Generate rule-sets
 on:
   workflow_dispatch:
   schedule:
-    - cron: "5 3 * * *" # 7:00 AM UTC+8 (use "00 00 * * *" for 8:00 AM UTC+8)
+    - cron: "00 23 * * *" # 7:00 AM UTC+8 (use "00 00 * * *" for 8:00 AM UTC+8)
 
 permissions:
   contents: write
@@ -48,7 +48,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git rm --ignore-unmatch geoip-cn.json netflix-ipv6.json
           git add second-last-rule.json netflix-ipv6.txt
           if git diff --staged --quiet; then
             echo "No changes detected. Skipping commit."
